@@ -1,0 +1,3 @@
+/home/jano/dev/Studium/WiSe2023/Algo/build/CMakeFiles/Application.dir
+/home/jano/dev/Studium/WiSe2023/Algo/build/CMakeFiles/edit_cache.dir
+/home/jano/dev/Studium/WiSe2023/Algo/build/CMakeFiles/rebuild_cache.dir
