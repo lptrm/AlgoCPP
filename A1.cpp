@@ -1,7 +1,48 @@
 
+#include <algorithm>
+#include <cmath>
 #include <iostream>
+#include <unordered_set>
 #include <vector>
+int factorial(int n) {
+  if (n <= 1) {
+    return 1;
+  }
+  return n * factorial(n - 1);
+}
+int countUniquePermutations(int maxDigits,
+                            const std::vector<int> &combination) {
+  int nonZeroCount = combination.size();
+  int zeroCount = maxDigits - nonZeroCount;
 
+  std::unordered_set<int> uniqueValues(combination.begin(), combination.end());
+  int uniquePermutations = 1;
+  int denominator = 1;
+  for (int value : uniqueValues) {
+    int count = std::count(combination.begin(), combination.end(), value);
+    denominator *= factorial(count);
+  }
+  uniquePermutations = factorial(maxDigits) / denominator;
+  return uniquePermutations;
+}
+int countUniqueSquarePermutations(int maxDigits,
+                                  const std::vector<int> &combination) {
+  int uniqueSquarePermutations = 1;
+
+  for (int value : combination) {
+    if (value == 0) {
+      continue; // Skip zero values
+    }
+
+    uniqueSquarePermutations *= 2;
+  }
+
+  // Include the possibility of zero values in the count
+  int zeroCount = maxDigits - combination.size();
+  uniqueSquarePermutations *= pow(2, zeroCount);
+
+  return uniqueSquarePermutations;
+}
 void findSquareCombinations(int target, std::vector<int> &current,
                             int currentSum, int currentNum,
                             std::vector<std::vector<int>> &combinations,
@@ -17,7 +58,7 @@ void findSquareCombinations(int target, std::vector<int> &current,
   }
 
   for (int i = currentNum; i * i <= target - currentSum; i++) {
-    current.push_back(i * i);
+    current.push_back(i);
     findSquareCombinations(target, current, currentSum + i * i, i, combinations,
                            digits);
     current.pop_back();
@@ -25,13 +66,13 @@ void findSquareCombinations(int target, std::vector<int> &current,
 }
 
 int main(int argc, char *argv[]) {
-  if (argc != 3) {
-    std::cerr << "Usage: " << argv[0] << " <n>" << std::endl;
-    return 1;
-  }
+  // if (argc != 3) {
+  //   std::cerr << "Usage: " << argv[0] << " <n>" << std::endl;
+  //   return 1;
+  // }
 
-  int target = std::stoi(argv[1]);
-  int digits = std::stoi(argv[2]);
+  int target = 2;
+  int digits = 8;
   std::vector<std::vector<int>> combinations;
 
   std::vector<int> current;
@@ -43,6 +84,16 @@ int main(int argc, char *argv[]) {
     }
     std::cout << std::endl;
   }
-
+  for (const std::vector<int> &combination : combinations) {
+    for (int square : combination) {
+      std::cout << square << " ";
+    }
+    int uniquePermutations = countUniquePermutations(digits, combination);
+    int uniqueSquarePermutations =
+        countUniqueSquarePermutations(digits, combination);
+    std::cout << "(Unique Permutations: " << uniquePermutations
+              << ", Unique Square Permutations: " << uniqueSquarePermutations
+              << ")" << std::endl;
+  }
   return 0;
 }

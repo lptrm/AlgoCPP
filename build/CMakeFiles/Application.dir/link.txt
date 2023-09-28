@@ -1,1 +1,1 @@
-/usr/bin/c++ -g CMakeFiles/Application.dir/A1.cpp.o -o Application 
+/usr/bin/c++  -g -g CMakeFiles/Application.dir/A1.cpp.o -o Application 

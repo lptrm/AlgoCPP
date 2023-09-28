@@ -1,7 +1,7 @@
 [
 {
   "directory": "/home/jano/dev/Studium/WiSe2023/Algo/build",
-  "command": "/usr/bin/c++   -g -std=gnu++17 -o CMakeFiles/Application.dir/A1.cpp.o -c /home/jano/dev/Studium/WiSe2023/Algo/A1.cpp",
+  "command": "/usr/bin/c++    -g -g -std=gnu++17 -o CMakeFiles/Application.dir/A1.cpp.o -c /home/jano/dev/Studium/WiSe2023/Algo/A1.cpp",
   "file": "/home/jano/dev/Studium/WiSe2023/Algo/A1.cpp",
   "output": "CMakeFiles/Application.dir/A1.cpp.o"
 }
