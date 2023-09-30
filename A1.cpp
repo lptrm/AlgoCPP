@@ -1,7 +1,10 @@
 
 #include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <iostream>
+#include <ostream>
+#include <string>
 #include <unordered_set>
 #include <vector>
 int factorial(int n) {
@@ -18,31 +21,17 @@ int countUniquePermutations(int maxDigits,
   std::unordered_set<int> uniqueValues(combination.begin(), combination.end());
   int uniquePermutations = 1;
   int denominator = 1;
+  int negatedPermutations = 1;
   for (int value : uniqueValues) {
     int count = std::count(combination.begin(), combination.end(), value);
     denominator *= factorial(count);
+    negatedPermutations *= pow(2, count);
   }
-  uniquePermutations = factorial(maxDigits) / denominator;
-  return uniquePermutations;
+  uniquePermutations =
+      factorial(maxDigits) / (denominator * factorial(zeroCount));
+  return negatedPermutations * uniquePermutations;
 }
-int countUniqueSquarePermutations(int maxDigits,
-                                  const std::vector<int> &combination) {
-  int uniqueSquarePermutations = 1;
 
-  for (int value : combination) {
-    if (value == 0) {
-      continue; // Skip zero values
-    }
-
-    uniqueSquarePermutations *= 2;
-  }
-
-  // Include the possibility of zero values in the count
-  int zeroCount = maxDigits - combination.size();
-  uniqueSquarePermutations *= pow(2, zeroCount);
-
-  return uniqueSquarePermutations;
-}
 void findSquareCombinations(int target, std::vector<int> &current,
                             int currentSum, int currentNum,
                             std::vector<std::vector<int>> &combinations,
@@ -66,34 +55,33 @@ void findSquareCombinations(int target, std::vector<int> &current,
 }
 
 int main(int argc, char *argv[]) {
-  // if (argc != 3) {
-  //   std::cerr << "Usage: " << argv[0] << " <n>" << std::endl;
-  //   return 1;
-  // }
+  if (argc != 3) {
+    std::cerr << "Usage: " << argv[0] << " <n>" << std::endl;
+    return 1;
+  }
 
-  int target = 2;
-  int digits = 8;
+  int target = std::stoi(argv[1]);
+  int digits = std::stoi(argv[2]);
   std::vector<std::vector<int>> combinations;
 
   std::vector<int> current;
+  auto start = std::chrono::high_resolution_clock::now();
   findSquareCombinations(target * target, current, 0, 1, combinations, digits);
-
-  for (const std::vector<int> &combination : combinations) {
-    for (int square : combination) {
-      std::cout << square << " ";
-    }
-    std::cout << std::endl;
-  }
+  int permutations = 0;
   for (const std::vector<int> &combination : combinations) {
     for (int square : combination) {
       std::cout << square << " ";
     }
     int uniquePermutations = countUniquePermutations(digits, combination);
-    int uniqueSquarePermutations =
-        countUniqueSquarePermutations(digits, combination);
-    std::cout << "(Unique Permutations: " << uniquePermutations
-              << ", Unique Square Permutations: " << uniqueSquarePermutations
-              << ")" << std::endl;
+    permutations += uniquePermutations;
+
+    std::cout << "(Unique Permutations: " << uniquePermutations << std::endl;
   }
+  auto end = std::chrono::high_resolution_clock::now();
+  auto duration =
+      std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  ;
+  std::cout << "Total Permutations " << permutations << std::endl;
+  std::cout << "Took: " << duration.count() << " mcs" << std::endl;
   return 0;
 }
